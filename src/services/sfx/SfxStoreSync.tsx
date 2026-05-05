@@ -19,13 +19,13 @@ export function SfxStoreSync() {
             else sfxService.play('ui_navigate');
             break;
           case 'turnTransition':
-            sfxService.play('timer_end');
+            // timer_end is played directly by RoundScreen when seconds hit 0
             break;
           case 'actEnd':
             sfxService.play('act_end');
             break;
           case 'final':
-            sfxService.play('final_win');
+            sfxService.play('champagne');
             break;
           default:
             sfxService.play('ui_navigate');

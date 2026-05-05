@@ -9,9 +9,11 @@ export function SettingsScreen() {
   const darkMode = useSettingsStore(s => s.darkMode);
   const volume = useSettingsStore(s => s.volume);
   const muted = useSettingsStore(s => s.muted);
+  const timerSeconds = useSettingsStore(s => s.timerSeconds);
   const setDarkMode = useSettingsStore(s => s.setDarkMode);
   const setVolume = useSettingsStore(s => s.setVolume);
   const setMuted = useSettingsStore(s => s.setMuted);
+  const setTimerSeconds = useSettingsStore(s => s.setTimerSeconds);
 
   const volumePct = Math.round(volume * 100);
 
@@ -37,7 +39,7 @@ export function SettingsScreen() {
                 </div>
               </div>
             </div>
-            <Toggle value={!muted} onChange={v => setMuted(!v)} />
+            <Toggle value={!muted} onChange={v => { sfxService.play('ui_click'); setMuted(!v); }} />
           </div>
         </div>
 
@@ -94,6 +96,36 @@ export function SettingsScreen() {
           🎵 Probar sonido
         </button>
 
+        {/* ── TEMPORIZADOR ─────────────────────────────────────── */}
+        <p className="eyebrow" style={{ marginTop: 8 }}>Temporizador</p>
+
+        <div className="card">
+          <div className="row between" style={{ marginBottom: 12 }}>
+            <div className="row" style={{ gap: 12 }}>
+              <div style={{ fontSize: 22 }}>⏱</div>
+              <div>
+                <div style={{ fontWeight: 700, fontSize: 15 }}>Duración del turno</div>
+                <div style={{ fontSize: 12, color: 'var(--fg-3)', marginTop: 2 }}>Por defecto: 60 segundos</div>
+              </div>
+            </div>
+          </div>
+          <div className="stepper">
+            <button
+              onClick={() => { sfxService.play('ui_click'); setTimerSeconds(timerSeconds - 15); }}
+              disabled={timerSeconds <= 15}
+            >−</button>
+            <div className="stepper-val">{timerSeconds}s</div>
+            <button
+              onClick={() => { sfxService.play('ui_click'); setTimerSeconds(timerSeconds + 15); }}
+              disabled={timerSeconds >= 180}
+            >+</button>
+          </div>
+          <div className="row between" style={{ marginTop: 8 }}>
+            <span style={{ fontSize: 11, color: 'var(--fg-3)' }}>Mín. 15s</span>
+            <span style={{ fontSize: 11, color: 'var(--fg-3)' }}>Máx. 180s</span>
+          </div>
+        </div>
+
         {/* ── APARIENCIA ───────────────────────────────────────── */}
         <p className="eyebrow" style={{ marginTop: 8 }}>Apariencia</p>
 
@@ -108,7 +140,7 @@ export function SettingsScreen() {
                 </div>
               </div>
             </div>
-            <Toggle value={darkMode} onChange={setDarkMode} />
+            <Toggle value={darkMode} onChange={v => { sfxService.play('ui_click'); setDarkMode(v); }} />
           </div>
         </div>
 

@@ -1,4 +1,5 @@
 import { useGameStore } from '@/stores/gameStore';
+import { sfxService } from '@/services/sfx/sfxService';
 import { StatusBar } from '@/components/common/StatusBar';
 import { TopBar } from '@/components/common/TopBar';
 import type { MediaCategory } from '@/domain/models';
@@ -30,7 +31,7 @@ export function CategoryScreen() {
               key={c.id}
               className="card-action"
               data-selected={category === c.id}
-              onClick={() => setCategory(c.id)}
+              onClick={() => { sfxService.play('ui_click'); setCategory(c.id); }}
               style={{ textAlign: 'center', padding: '20px 10px' }}
             >
               <div style={{ fontSize: 32 }}>{c.emoji}</div>
@@ -46,7 +47,7 @@ export function CategoryScreen() {
               key={n}
               className="card-action"
               data-selected={itemLimit === n}
-              onClick={() => setItemLimit(n)}
+              onClick={() => { sfxService.play('ui_click'); setItemLimit(n); }}
               style={{
                 textAlign: 'center', padding: '16px 0',
                 fontFamily: 'var(--font-display)', fontSize: 22,
@@ -58,7 +59,7 @@ export function CategoryScreen() {
           <button
             className="card-action"
             data-selected={isUnlimited}
-            onClick={() => setItemLimit(-1)}
+            onClick={() => { sfxService.play('ui_click'); setItemLimit(-1); }}
             style={{
               textAlign: 'center', padding: '16px 0',
               fontFamily: 'var(--font-display)', fontSize: 18,

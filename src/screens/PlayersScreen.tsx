@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useGameStore } from '@/stores/gameStore';
+import { sfxService } from '@/services/sfx/sfxService';
 import { StatusBar } from '@/components/common/StatusBar';
 import { TopBar } from '@/components/common/TopBar';
 import { Avatar } from '@/components/common/Avatar';
@@ -34,7 +35,7 @@ export function PlayersScreen() {
           <div key={p.id} className="card" style={{ animation: 'slide-up 280ms var(--ease)' }}>
             <div className="row" style={{ gap: 14 }}>
               <button
-                onClick={() => setPicking(p.id)}
+                onClick={() => { sfxService.play('ui_click'); setPicking(p.id); }}
                 style={{ background: 'transparent', border: 0, padding: 0 }}
               >
                 <Avatar id={p.avatarId} />
@@ -55,7 +56,7 @@ export function PlayersScreen() {
                   />
                 ) : (
                   <button
-                    onClick={() => setEditingName(p.id)}
+                    onClick={() => { sfxService.play('ui_click'); setEditingName(p.id); }}
                     style={{
                       background: 'transparent', border: 0, padding: 0,
                       color: 'var(--fg)', fontSize: 17, fontWeight: 700,
@@ -70,7 +71,7 @@ export function PlayersScreen() {
               </div>
               <button
                 className="icon-btn"
-                onClick={() => removePlayer(p.id)}
+                onClick={() => { sfxService.play('error'); removePlayer(p.id); }}
                 style={{ color: 'var(--bad)' }}
                 aria-label="Eliminar"
               >
@@ -85,7 +86,7 @@ export function PlayersScreen() {
 
         <button
           className="card-action"
-          onClick={() => addPlayer()}
+          onClick={() => { sfxService.play('ui_click'); addPlayer(); }}
           style={{ borderStyle: 'dashed', textAlign: 'center', padding: 20 }}
         >
           <div style={{ fontSize: 28 }}>+</div>
@@ -96,6 +97,7 @@ export function PlayersScreen() {
           <AvatarPicker
             currentId={players.find(p => p.id === picking)?.avatarId}
             onPick={(aid) => {
+              sfxService.play('ui_click');
               updatePlayer(picking, { avatarId: aid });
               setPicking(null);
             }}

@@ -12,13 +12,14 @@ interface ConfettiProps {
 export function Confetti({ count = 180 }: ConfettiProps) {
   const pieces = useMemo(() =>
     Array.from({ length: count }, (_, i) => ({
-      left: Math.random() * 100,
-      color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
-      delay: Math.random() * 1.4,
-      rotate: Math.random() * 360,
-      duration: 7 + Math.random() * 4,
+      left:     Math.random() * 100,
+      color:    CONFETTI_COLORS[i % CONFETTI_COLORS.length],
+      delay:    Math.random() * 3.5,
+      duration: 6 + Math.random() * 5,
+      width:    5 + Math.random() * 7,
+      height:   10 + Math.random() * 10,
     })),
-    [count]
+    [count],
   );
 
   return (
@@ -28,11 +29,13 @@ export function Confetti({ count = 180 }: ConfettiProps) {
           key={i}
           className="confetti-piece"
           style={{
-            left: `${p.left}%`,
-            background: p.color,
-            animationDelay: `${p.delay}s`,
-            animationDuration: `${p.duration}s`,
-            transform: `rotate(${p.rotate}deg)`,
+            left:                `${p.left}%`,
+            background:          p.color,
+            animationDelay:      `${p.delay}s`,
+            animationDuration:   `${p.duration}s`,
+            animationFillMode:   'both',
+            width:               `${p.width}px`,
+            height:              `${p.height}px`,
           }}
         />
       ))}

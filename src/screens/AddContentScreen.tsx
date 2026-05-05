@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from 'react';
 import { useGameStore } from '@/stores/gameStore';
+import { sfxService } from '@/services/sfx/sfxService';
 import { StatusBar } from '@/components/common/StatusBar';
 import { TopBar } from '@/components/common/TopBar';
 import { Avatar } from '@/components/common/Avatar';
@@ -59,6 +60,7 @@ export function AddContentScreen() {
   };
 
   const addTitle = (item: MediaItem) => {
+    sfxService.play('ui_click');
     addToPool({ ...item, addedBy: player.id, source: 'manual' });
     setSearch('');
     setSearchResults([]);
@@ -66,6 +68,7 @@ export function AddContentScreen() {
   };
 
   const addManual = (type: 'pelicula' | 'serie') => {
+    sfxService.play('ui_click');
     addManualToPool(search.trim(), type, player.id);
     setSearch('');
     setSearchResults([]);
@@ -74,6 +77,7 @@ export function AddContentScreen() {
 
   const handleRandom = useCallback(async () => {
     if (reachedMax || shuffling) return;
+    sfxService.play('ui_click');
     setShuffling(true);
     try {
       const provider = getMediaProvider();
@@ -282,7 +286,7 @@ export function AddContentScreen() {
                 </div>
                 <button
                   className="icon-btn"
-                  onClick={() => removeFromPool(item.titleId)}
+                  onClick={() => { sfxService.play('error'); removeFromPool(item.titleId); }}
                   style={{ color: 'var(--bad)' }}
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">

@@ -49,6 +49,7 @@ interface StoreActions {
   setTeamCount: (n: number) => void;
   regenTeams: () => void;
   updateTeam: (id: string, patch: Partial<Team>) => void;
+  movePlayerToTeam: (playerId: string, targetTeamId: string) => void;
 
   // Config
   setCategory: (category: MediaCategory) => void;
@@ -162,6 +163,25 @@ export const useGameStore = create<StoreState>()(
 
     updateTeam: (id, patch) => {
       const teams = get().teams.map(t => t.id === id ? { ...t, ...patch } : t);
+      set({ teams });
+      get().saveState();
+    },
+
+    movePlayerToTeam: (playerId, targetTeamId) => {
+      const current = get().teams;
+      const sourceTeam = current.find(t => t.playerIds.includes(playerId));
+      // Never leave a team with zero players
+      if (sourceTeam && sourceTeam.id !== targetTeamId && sourceTeam.playerIds.length <= 1) {
+        return;
+      }
+      const teams = current.map(t => {
+        if (t.id === targetTeamId) {
+          return t.playerIds.includes(playerId)
+            ? t
+            : { ...t, playerIds: [...t.playerIds, playerId] };
+        }
+        return { ...t, playerIds: t.playerIds.filter(id => id !== playerId) };
+      });
       set({ teams });
       get().saveState();
     },

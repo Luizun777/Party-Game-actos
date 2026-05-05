@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useGameStore } from '@/stores/gameStore';
+import { sfxService } from '@/services/sfx/sfxService';
 import { StatusBar } from '@/components/common/StatusBar';
 import { TopBar } from '@/components/common/TopBar';
 import { Poster } from '@/components/common/Poster';
@@ -21,6 +22,7 @@ export function RandomGlobalScreen() {
   const globalItems = pool.filter(p => p.addedBy === 'random');
 
   const generate = async () => {
+    sfxService.play('ui_click');
     setGenerating(true);
     try {
       const provider = getMediaProvider();
@@ -55,7 +57,7 @@ export function RandomGlobalScreen() {
             <button
               className="twk-toggle"
               data-on={enabled ? '1' : '0'}
-              onClick={() => setEnabled(!enabled)}
+              onClick={() => { sfxService.play('ui_click'); setEnabled(!enabled); }}
             >
               <i />
             </button>
@@ -75,7 +77,7 @@ export function RandomGlobalScreen() {
                   key={c.id}
                   className="card-action"
                   data-selected={cat === c.id}
-                  onClick={() => setCat(c.id)}
+                  onClick={() => { sfxService.play('ui_click'); setCat(c.id); }}
                   style={{ textAlign: 'center', padding: 14, fontWeight: 600, fontSize: 13 }}
                 >
                   {c.label}
@@ -90,7 +92,7 @@ export function RandomGlobalScreen() {
                   key={n}
                   className="card-action"
                   data-selected={count === n}
-                  onClick={() => setCount(n)}
+                  onClick={() => { sfxService.play('ui_click'); setCount(n); }}
                   style={{
                     textAlign: 'center', padding: 14,
                     fontFamily: 'var(--font-display)', fontSize: 18,
@@ -139,7 +141,7 @@ export function RandomGlobalScreen() {
                 <div key={item.titleId} style={{ position: 'relative', animation: 'pop-in 300ms var(--ease-spring)' }}>
                   <Poster title={item.title} color={item.color} posterUrl={item.posterUrl} />
                   <button
-                    onClick={() => removeFromPool(item.titleId)}
+                    onClick={() => { sfxService.play('error'); removeFromPool(item.titleId); }}
                     style={{
                       position: 'absolute', top: -6, right: -6,
                       width: 24, height: 24, borderRadius: '50%',

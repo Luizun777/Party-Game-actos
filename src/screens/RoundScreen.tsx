@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useGameStore } from '@/stores/gameStore';
+import { useSettingsStore } from '@/stores/settingsStore';
 import { StatusBar } from '@/components/common/StatusBar';
 import { Timer } from '@/components/common/Timer';
 import { ACTS } from '@/domain/models';
-import { TIMER_SECONDS } from '@/domain/constants';
 import { useSfx } from '@/services/sfx/useSfx';
 import type { ActNumber } from '@/domain/models';
 
@@ -23,12 +23,12 @@ export function RoundScreen() {
   const passTitle = useGameStore(s => s.passTitle);
   const nextTurnAction = useGameStore(s => s.nextTurnAction);
 
-  const [seconds, setSeconds] = useState(TIMER_SECONDS);
+  const timerSeconds = useSettingsStore(s => s.timerSeconds);
+  const [seconds, setSeconds] = useState(timerSeconds);
   const [paused, setPaused] = useState(false);
   const [feedback, setFeedback] = useState<'correct' | 'pass' | null>(null);
   const [transitioning, setTransitioning] = useState(false);
   const { play } = useSfx();
-  const warnedRef = useRef(false);
 
   const actInfo = ACTS[act as ActNumber];
   const remaining = actPool.length;
@@ -43,14 +43,14 @@ export function RoundScreen() {
   useEffect(() => {
     if (paused || feedback) return;
     if (seconds <= 0) {
+      play('timer_end');
       nextTurnAction();
       go('turnTransition');
       return;
     }
-    // Single warning tick when entering danger zone
-    if (seconds === 10 && !warnedRef.current) {
-      warnedRef.current = true;
-      play('timer_warn');
+    // Tick every second during last 10 seconds
+    if (seconds <= 10) {
+      play(seconds === 10 ? 'timer_warn' : 'timer_tick');
     }
     const id = setTimeout(() => setSeconds(s => s - 1), 1000);
     return () => clearTimeout(id);
@@ -158,11 +158,11 @@ export function RoundScreen() {
       {/* Main content */}
       <div className="screen" style={{ paddingTop: 16 }}>
         <div style={{ marginTop: 8 }}>
-          <Timer seconds={seconds} total={TIMER_SECONDS} paused={paused} />
+          <Timer seconds={seconds} total={timerSeconds} paused={paused} />
         </div>
 
         <div className="row center" style={{ gap: 8 }}>
-          <button className="btn btn-secondary btn-sm" onClick={() => setPaused(!paused)}>
+          <button className="btn btn-secondary btn-sm" onClick={() => { play('ui_click'); setPaused(!paused); }}>
             {paused ? '▶ Reanudar' : '⏸ Pausar'}
           </button>
         </div>

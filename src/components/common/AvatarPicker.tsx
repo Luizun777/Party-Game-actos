@@ -1,5 +1,6 @@
 import { AVATAR_CATALOG } from './avatarCatalog';
 import { Avatar } from './Avatar';
+import { sfxService } from '@/services/sfx/sfxService';
 
 interface AvatarPickerProps {
   currentId?: string;
@@ -43,7 +44,7 @@ export function AvatarPicker({ currentId, onPick, onClose, avatarStyle = 'flat' 
           {AVATAR_CATALOG.map(a => (
             <button
               key={a.id}
-              onClick={() => onPick(a.id)}
+              onClick={() => { sfxService.play('ui_click'); onPick(a.id); }}
               style={{
                 background: 'transparent', border: 0,
                 padding: 6, borderRadius: 12, cursor: 'pointer',

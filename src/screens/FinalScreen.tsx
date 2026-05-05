@@ -42,7 +42,10 @@ export function FinalScreen() {
           <h2
             className="display"
             style={{
-              fontSize: 'clamp(36px, 9vw, 56px)',
+              fontSize: 'clamp(22px, 8cqi, 52px)',
+              lineHeight: 1.1,
+              wordBreak: 'break-word',
+              overflowWrap: 'break-word',
               marginTop: 4,
               background: `linear-gradient(135deg, ${winners[0]?.color ?? 'var(--brand)'}, oklch(0.78 0.18 calc(var(--brand-h) + 60)))`,
               WebkitBackgroundClip: 'text',

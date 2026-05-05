@@ -6,11 +6,13 @@ interface SettingsState {
   darkMode: boolean;
   volume: number;   // 0–1
   muted: boolean;
+  timerSeconds: number;
 
   setDarkMode: (v: boolean) => void;
   setVolume: (v: number) => void;
   setMuted: (v: boolean) => void;
   toggleMuted: () => void;
+  setTimerSeconds: (n: number) => void;
 }
 
 export const useSettingsStore = create<SettingsState>()(
@@ -19,6 +21,7 @@ export const useSettingsStore = create<SettingsState>()(
       darkMode: true,
       volume: 0.8,
       muted: false,
+      timerSeconds: 60,
 
       setDarkMode(v) {
         set({ darkMode: v });
@@ -39,6 +42,10 @@ export const useSettingsStore = create<SettingsState>()(
       toggleMuted() {
         const next = !get().muted;
         get().setMuted(next);
+      },
+
+      setTimerSeconds(n) {
+        set({ timerSeconds: Math.max(15, Math.min(180, n)) });
       },
     }),
     {
